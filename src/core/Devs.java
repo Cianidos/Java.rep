@@ -1,7 +1,7 @@
 package core;
 
-public class Comp_1 {
+public class Devs {
     public static void main(String[] args) {
-        System.out.print("Hello World!!");
+        System.out.print("Hello World2");
     }
 }
