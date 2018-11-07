@@ -3,6 +3,7 @@ package core;
 public class Unit {
 // Variables
 
+
     private int xp = 0;
     private int level = 0;
     private String team;
@@ -10,6 +11,7 @@ public class Unit {
     private int health;
     private int damage;
     private int mana;
+    private boolean dead = false;
 
 // Generators
     public Unit(){
@@ -20,7 +22,7 @@ public class Unit {
         mana = 50;
     }
 
-    public Unit(int health_,int damage_,int mana_){
+    Unit(int health_, int damage_, int mana_){
         team = "none";
         nomer = 0;
         health = health_;
@@ -28,7 +30,7 @@ public class Unit {
         mana = mana_;
     }
 
-    public Unit(String team_, int nomer_){
+    Unit(String team_, int nomer_){
         team = team_;
         nomer = nomer_;
         health = 100;
@@ -36,7 +38,7 @@ public class Unit {
         mana = 50;
     }
 
-    public Unit(String team_,int nomer_,int health_,int damage_,int mana_){
+    Unit(String team_, int nomer_, int health_, int damage_, int mana_){
         team = team_;
         nomer = nomer_;
         health = health_;
@@ -46,41 +48,54 @@ public class Unit {
 
 // Methods
     public void kickUnit(Unit odj){
-        odj.setHealth(odj.getHealth()-this.getDamage());
-        this.setXp(this.getXp()+5);
-        this.upLevel();
+        if (odj.isDead()) {
+            odj.setHealth(odj.getHealth() - this.getDamage());
+            this.setXp(this.getXp() + 5);
+            this.upLevel();
+            System.out.printf("%d %s нанес %d уронa %d %s \n", this.getNomer(), this.getTeam(), this.getDamage(), odj.getNomer(), odj.getTeam());
+            odj.death(this);
+        } else {System.out.printf("очень жаль, но %d %s уже мертв \n",odj.getNomer(), odj.getTeam());}
     }
 
     public void restoreHealth(int hp){
         this.setHealth(this.getHealth()+hp);
         this.setMana(this.getMana()-(hp%5));
+        System.out.printf("%d %s + %d здоровья -- %d, осталось %d маны \n",this.getNomer(),this.getTeam(),hp,this.getHealth(),this.getMana());
     }
 
     public void upLevel(){
         if (getXp()>10){
             this.setLevel(this.getLevel()+1);
             this.setXp(this.getXp()-10);
+            System.out.printf("%d %s получил новый уровень %d, осталось %d опыта \n",this.getNomer(),this.getTeam(),this.getLevel(),this.getXp());
+        }
+    }
+
+    void death(Unit odj){
+        if (this.getHealth()<=0){
+            this.setDead();
+            System.out.printf("%d %s погиб от рук %d %s \n",this.getNomer(),this.getTeam(),odj.getNomer(),odj.getTeam());
         }
     }
 
 // Getters and Satters
-    public int getXp() {
+    int getXp() {
         return xp;
     }
 
-    public void setXp(int xp) {
+    void setXp(int xp) {
         this.xp = xp;
     }
 
-    public int getLevel() {
+    int getLevel() {
         return level;
     }
 
-    public void setLevel(int level) {
+    void setLevel(int level) {
         this.level = level;
     }
 
-    public String getTeam() {
+    String getTeam() {
         return team;
     }
 
@@ -88,7 +103,7 @@ public class Unit {
         this.team = team;
     }
 
-    public int getNomer() {
+    int getNomer() {
         return nomer;
     }
 
@@ -96,15 +111,15 @@ public class Unit {
         this.nomer = nomer;
     }
 
-    public int getHealth() {
+    int getHealth() {
         return health;
     }
 
-    public void setHealth(int health) {
+    void setHealth(int health) {
         this.health = health;
     }
 
-    public int getDamage() {
+    int getDamage() {
         return damage;
     }
 
@@ -112,11 +127,19 @@ public class Unit {
         this.damage = damage;
     }
 
-    public int getMana() {
+    int getMana() {
         return mana;
     }
 
-    public void setMana(int mana) {
+    void setMana(int mana) {
         this.mana = mana;
+    }
+
+    boolean isDead() {
+        return !dead;
+    }
+
+    private void setDead() {
+        this.dead = true;
     }
 }
